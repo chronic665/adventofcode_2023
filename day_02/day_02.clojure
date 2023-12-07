@@ -1,0 +1,46 @@
+(println "Hello World")
+
+;; (def input (slurp "example_input.txt"))
+
+(ns day_02
+  (:require [clojure.java.io :as io]))
+
+(use '[clojure.string :only (split join replace triml)])
+
+(defrecord Game [rounds])
+
+(defrecord GameRound [red blue green])
+
+(defn read-lines [filename]
+  (let [rdr (io/reader filename)]
+    (defn read-next-line []
+      (if-let [line (.readLine rdr)]
+        (cons line (lazy-seq (read-next-line)))
+        (.close rdr)))
+    (lazy-seq (read-next-line))))
+
+
+(defn parse-game [line]
+  (def game (split line #"\s*:\s*"))
+  (println game)
+  (def rounds (split (str (rest game)) #"\s*;\s*"))
+;;   (println (join "||" rounds))
+  (doseq [round rounds]
+    (def temp (replace round #"[\(\"\)]" ""))
+    (def balls (split temp #","))
+    (doseq [ball balls]
+      (println "\t" (triml ball))
+      )
+
+    )
+  )
+
+;; (let [rdr (io/reader "example_input.txt")]
+;;   (println (.readLine rdr))
+;;   (println (.readLine rdr)))
+
+(defn echo-file []
+  (doseq [line (read-lines "example_input.txt")]
+    (parse-game line)))
+
+(echo-file)

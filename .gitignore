@@ -1,0 +1,4 @@
+out/
+.clj-kondo
+.idea/
+.lsp/
